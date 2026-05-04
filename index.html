@@ -210,7 +210,7 @@
   .cloud-label{position:relative;z-index:2;text-align:center;line-height:1.15;padding:0 22px;display:flex;flex-direction:column;align-items:center;gap:14px}
   .cloud-label .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.78);font-weight:500;position:relative;padding-bottom:14px}
   .cloud-label .tag::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:36px;height:1px;background:rgba(255,255,255,.4)}
-  .cloud-label .kn{font-family:'Inter',sans-serif;font-size:32px;font-weight:700;letter-spacing:-.03em;color:#fff}
+  .cloud-label .kn{font-family:'Inter',sans-serif;font-size:28px;font-weight:700;letter-spacing:-.03em;color:#fff}
 
   .orbiter{position:absolute;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px rgba(73,79,223,.3),0 0 12px rgba(73,79,223,.5)}
   .orbiter.o1{top:8%;left:50%;animation:orbit 6s linear infinite}
@@ -292,11 +292,36 @@
   .sticky button:hover svg{transform:translateX(2px)}
 
   @media (max-width:980px){
-    .diagram{grid-template-columns:1fr;gap:32px}
-    .col.left,.col.right{padding:0;align-items:center}
+    .diagram{grid-template-columns:1fr;gap:32px;min-height:0}
+    .col.left,.col.right{padding:0;align-items:stretch}
+    .col.center{min-height:0}
     .wires{display:none}
+    .arrow-label{display:none}
     .strip{grid-template-columns:1fr}
     .nav-links{display:none}
+  }
+  @media (max-width:640px){
+    .hero{padding:40px 20px 32px}
+    .stage{padding:0 20px;margin:32px auto 96px}
+    .frame{padding:24px 16px;border-radius:18px}
+    .frame-label{position:static;margin-bottom:18px;display:block}
+    .prompt,.sources{max-width:100%}
+    .prompt{padding:16px}
+    .prompt .text{font-size:16px}
+    .col.center{align-self:center}
+    .cloud{width:240px;height:240px}
+    .cloud-core{width:172px;height:172px}
+    .cloud-label .kn{font-size:20px}
+    .cloud-label .tag{font-size:10px;padding-bottom:10px}
+    .strip{padding:0 20px 140px}
+    .sticky{
+      left:12px;right:12px;bottom:14px;transform:none;
+      padding:6px 6px 6px 16px;
+      gap:10px;
+      font-size:13px;
+    }
+    .sticky .lead{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sticky button{flex-shrink:0;white-space:nowrap;padding:0 14px;height:38px;font-size:13px}
   }
 </style>
 </head>
