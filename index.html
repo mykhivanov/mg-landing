@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MeetingGate — the gate before every meeting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<style>
+  :root{
+    --primary:#494fdf;
+    --primary-2:#3a40c9;
+    --primary-soft:#eef0ff;
+    --primary-softer:#f6f7ff;
+    --ink:#0b0b12;
+    --ink-2:#3b3d4a;
+    --ink-3:#74778a;
+    --line:#e7e8ef;
+    --bg:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-feature-settings:"zero","ss02"}
+
+  /* ---------- nav ---------- */
+  .nav{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.86);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:1280px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;font-size:18px}
+  .brand-mark{width:22px;height:22px;display:grid;place-items:center;border-radius:6px;background:var(--primary);color:#fff;font-weight:800;font-size:12px;font-family:'JetBrains Mono',monospace}
+  .nav-links{display:flex;gap:28px;color:var(--ink-2);font-size:14px;font-weight:500}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:8px;background:var(--ink);color:#fff;font-weight:600;font-size:13.5px;transition:transform .15s ease,background .15s ease}
+  .nav-cta:hover{background:#000;transform:translateY(-1px)}
+  .nav-cta .dot{width:6px;height:6px;border-radius:50%;background:#7af3a4;box-shadow:0 0 0 3px rgba(122,243,164,.25)}
+
+  /* ---------- hero ---------- */
+  .hero{max-width:1280px;margin:0 auto;padding:64px 32px 48px;position:relative}
+  .brand-hero{margin-bottom:48px;font-size:20px}
+  .brand-hero .brand-mark{width:26px;height:26px;font-size:13px;border-radius:7px}
+
+  /* ---- stacked wordmark ---- */
+  .stacked-mark{
+    display:inline-flex;flex-direction:column;align-items:flex-start;gap:6px;
+    margin-bottom:36px;position:relative;
+    padding:10px 0 14px;
+  }
+  .stacked-mark .top-line{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--ink-3);
+    display:flex;align-items:center;gap:10px;
+  }
+  .stacked-mark .top-line::before{
+    content:"";width:28px;height:1px;background:var(--primary);
+  }
+  .stacked-mark .org-kn{
+    font-size:36px;line-height:1;letter-spacing:-.02em;font-weight:600;
+    color:var(--ink);
+  }
+  .stacked-mark .org-kn .slash{color:var(--primary);margin:0 .15em;font-weight:400}
+  .stacked-mark .arrow-down{
+    margin:6px 0 6px 12px;color:var(--primary);
+    animation:bob 2.2s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+  .stacked-mark .mg{
+    display:flex;align-items:center;gap:14px;
+    font-size:48px;line-height:1;letter-spacing:-.035em;font-weight:700;
+    color:var(--ink);
+  }
+  .stacked-mark .mg .mg-mark{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(135deg,#6c72ff,#494fdf 60%,#3a3fc4);
+    color:#fff;display:grid;place-items:center;
+    font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;
+    box-shadow:0 10px 24px -10px rgba(73,79,223,.7), inset 0 1px 0 rgba(255,255,255,.25);
+    position:relative;overflow:hidden;
+  }
+  .stacked-mark .mg .mg-mark::after{
+    content:"";position:absolute;inset:0;
+    background:conic-gradient(from 0deg,transparent 0%,rgba(255,255,255,.4) 8%,transparent 16%);
+    animation:spin 5s linear infinite;filter:blur(4px);
+  }
+  .stacked-mark .mg em{font-style:normal;color:var(--primary)}
+  .stacked-mark .meta{
+    margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
+    color:var(--ink-3);text-transform:uppercase;
+  }
+  .stacked-mark .meta b{color:var(--ink-2);font-weight:500}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:12px;color:var(--ink-2);letter-spacing:.02em}
+  .eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px rgba(73,79,223,.18);animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(73,79,223,.18)}50%{box-shadow:0 0 0 8px rgba(73,79,223,.05)}}
+  h1.headline{font-size:clamp(40px,5.6vw,76px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:22px 0 18px;text-wrap:balance;max-width:14ch}
+  h1.headline em{font-style:normal;color:var(--primary);position:relative}
+  h1.headline em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.12em;background:var(--primary);opacity:.18;border-radius:2px}
+  .sub{font-size:19px;line-height:1.5;color:var(--ink-2);max-width:58ch;text-wrap:pretty}
+  .meta-row{margin-top:28px;display:flex;gap:28px;align-items:center;color:var(--ink-3);font-size:13px}
+  .meta-row .sep{width:1px;height:14px;background:var(--line)}
+
+  /* ---------- diagram ---------- */
+  .stage{margin:64px auto 96px;max-width:1280px;padding:0 32px}
+  .frame{
+    position:relative;
+    border:1px solid var(--line);
+    border-radius:24px;
+    background:
+      radial-gradient(1100px 360px at 50% 10%, rgba(73,79,223,.06), transparent 60%),
+      linear-gradient(#fff,#fff);
+    padding:36px;
+    overflow:hidden;
+  }
+  .frame::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      linear-gradient(to right, rgba(11,11,18,.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(11,11,18,.04) 1px, transparent 1px);
+    background-size:32px 32px;
+    mask-image:radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 90%);
+    pointer-events:none;
+  }
+  .frame-label{position:absolute;top:14px;left:18px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .frame-label .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary);margin-right:8px;vertical-align:middle}
+
+  .diagram{
+    position:relative;
+    display:grid;
+    grid-template-columns: 1fr 1.15fr 1.1fr;
+    gap:0;
+    align-items:center;
+    min-height:520px;
+  }
+  /* connecting svg */
+  .wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+  .wires path{fill:none;stroke:var(--primary);stroke-width:1.6;stroke-dasharray:4 6;stroke-linecap:round;opacity:.55}
+  .wires path.thick{stroke-width:2.2;opacity:.9}
+  .wires .flow{animation:dash 1.6s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-40}}
+
+  /* left column */
+  .col{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px}
+  .col.left{align-items:flex-start;padding-right:8px}
+  .prompt{
+    background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px;
+    box-shadow:0 1px 0 rgba(11,11,18,.02), 0 12px 32px -16px rgba(11,11,18,.18);
+    max-width:300px;
+  }
+  .prompt .who{display:flex;align-items:center;gap:10px;color:var(--ink-3);font-size:12px;margin-bottom:8px}
+  .avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#ffd2a8,#f6a25e);display:grid;place-items:center;color:#5a2b00;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
+  .prompt .text{font-size:18px;line-height:1.35;letter-spacing:-.01em;font-weight:500}
+  .prompt .text .caret{display:inline-block;width:2px;height:18px;background:var(--ink);transform:translateY(3px);margin-left:2px;animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  .sources{margin-top:22px;display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px}
+  .src-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px}
+  .src{
+    display:flex;align-items:center;gap:12px;
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:10px 12px;font-size:14px;font-weight:500;color:var(--ink);
+    box-shadow:0 1px 0 rgba(11,11,18,.02);
+    position:relative;
+  }
+  .src .logo{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;flex-shrink:0}
+  .src .desc{font-size:11px;color:var(--ink-3);font-weight:400;margin-top:1px}
+  .src .col-text{display:flex;flex-direction:column;line-height:1.2}
+  .src .pill{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--primary);background:var(--primary-soft);border-radius:6px;padding:3px 7px}
+
+  /* center column - cloud */
+  .col.center{align-items:center;justify-content:center;position:relative;min-height:480px}
+  .cloud{
+    position:relative;
+    width:340px;height:340px;
+    display:grid;place-items:center;
+  }
+  .cloud-ring{
+    position:absolute;inset:0;border-radius:50%;
+    border:1px dashed rgba(73,79,223,.35);
+    animation:spin 30s linear infinite;
+  }
+  .cloud-ring.r2{inset:24px;animation:spin 22s linear infinite reverse;border-color:rgba(73,79,223,.18)}
+  .cloud-ring.r3{inset:48px;animation:spin 40s linear infinite;border-color:rgba(73,79,223,.5);border-style:solid;opacity:.18}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .cloud-core{
+    position:relative;width:228px;height:228px;border-radius:50%;
+    background:
+      radial-gradient(circle at 30% 30%, #6c72ff 0%, #494fdf 40%, #3a3fc4 80%);
+    box-shadow:
+      0 0 0 1px rgba(73,79,223,.6),
+      0 30px 80px -20px rgba(73,79,223,.55),
+      inset 0 -20px 40px rgba(0,0,0,.18),
+      inset 0 20px 40px rgba(255,255,255,.18);
+    display:grid;place-items:center;
+    color:#fff;
+    overflow:hidden;
+  }
+  .cloud-core::after{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 70% 75%, rgba(255,255,255,.18), transparent 40%);
+    mix-blend-mode:screen;
+  }
+  .cloud-core::before{
+    content:"";position:absolute;inset:-2px;border-radius:50%;
+    background:conic-gradient(from 0deg, transparent 0%, rgba(255,255,255,.35) 8%, transparent 16%, transparent 100%);
+    animation:spin 6s linear infinite;
+    filter:blur(6px);opacity:.6;
+  }
+  .cloud-label{position:relative;z-index:2;text-align:center;line-height:1.15;padding:0 22px;display:flex;flex-direction:column;align-items:center;gap:14px}
+  .cloud-label .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.78);font-weight:500;position:relative;padding-bottom:14px}
+  .cloud-label .tag::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:36px;height:1px;background:rgba(255,255,255,.4)}
+  .cloud-label .kn{font-family:'Inter',sans-serif;font-size:32px;font-weight:700;letter-spacing:-.03em;color:#fff}
+
+  .orbiter{position:absolute;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px rgba(73,79,223,.3),0 0 12px rgba(73,79,223,.5)}
+  .orbiter.o1{top:8%;left:50%;animation:orbit 6s linear infinite}
+  .orbiter.o2{top:60%;left:6%;animation:orbit 9s linear infinite reverse}
+  .orbiter.o3{top:80%;left:80%;animation:orbit 7s linear infinite}
+  @keyframes orbit{
+    0%{transform:translate(0,0)}
+    25%{transform:translate(8px,-6px)}
+    50%{transform:translate(0,-12px)}
+    75%{transform:translate(-8px,-6px)}
+    100%{transform:translate(0,0)}
+  }
+
+  /* right column - outputs */
+  .col.right{align-items:stretch;padding-left:8px;gap:12px}
+  .out-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;
+    box-shadow:0 1px 0 rgba(11,11,18,.02), 0 8px 24px -16px rgba(11,11,18,.12);
+    display:flex;gap:14px;align-items:flex-start;
+    position:relative;
+    transition:transform .2s ease,border-color .2s ease;
+  }
+  .card:hover{transform:translateY(-1px);border-color:#d2d5e8}
+  .card .icon{width:32px;height:32px;border-radius:9px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex-shrink:0}
+  .card .body{flex:1;min-width:0}
+  .card .k{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+  .card .v{font-size:14.5px;line-height:1.4;color:var(--ink);font-weight:500}
+  .card .v .em{color:var(--primary);font-weight:600}
+  .card .ts{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-3)}
+  .card .check{position:absolute;top:10px;right:12px;width:16px;height:16px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:10px}
+  .card.async{background:linear-gradient(180deg,#fff, #fbfcff)}
+  .slack-msg{
+    margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;
+    font-size:13px;line-height:1.45;color:var(--ink-2);
+  }
+  .slack-msg .head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .slack-msg .head .who{font-weight:600;color:var(--ink);font-size:12.5px}
+  .slack-msg .head .time{font-size:11px;color:var(--ink-3);font-family:'JetBrains Mono',monospace}
+  .slack-bot{width:18px;height:18px;border-radius:5px;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace}
+
+  /* arrow labels */
+  .arrow-label{
+    position:absolute;z-index:3;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);
+    background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 8px;
+  }
+
+  /* ----- sub strip ----- */
+  .strip{max-width:1280px;margin:0 auto;padding:0 32px 120px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feat{border:1px solid var(--line);border-radius:16px;padding:22px;background:#fff}
+  .feat .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--primary);letter-spacing:.1em}
+  .feat h3{font-size:17px;letter-spacing:-.01em;margin:8px 0 6px;font-weight:600}
+  .feat p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.5}
+
+  /* sticky cta */
+  .sticky{
+    position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+    z-index:50;
+    display:flex;align-items:center;gap:14px;
+    padding:8px 8px 8px 22px;
+    border-radius:999px;
+    background:var(--ink);color:#fff;
+    box-shadow:0 20px 60px -20px rgba(11,11,18,.55), 0 2px 0 rgba(255,255,255,.04) inset;
+    font-size:14px;
+  }
+  .sticky .lead{display:flex;align-items:center;gap:10px}
+  .sticky .lead .pulse{width:7px;height:7px;border-radius:50%;background:#7af3a4;box-shadow:0 0 0 3px rgba(122,243,164,.22);animation:pulse 1.6s ease-in-out infinite}
+  .sticky button{
+    appearance:none;border:0;cursor:pointer;
+    background:var(--primary);color:#fff;font-weight:600;font-size:14px;
+    padding:0 18px;height:42px;border-radius:999px;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:transform .15s ease,background .15s ease;
+    font-family:inherit;
+  }
+  .sticky button:hover{background:var(--primary-2);transform:translateY(-1px)}
+  .sticky button svg{transition:transform .2s ease}
+  .sticky button:hover svg{transform:translateX(2px)}
+
+  @media (max-width:980px){
+    .diagram{grid-template-columns:1fr;gap:32px}
+    .col.left,.col.right{padding:0;align-items:center}
+    .wires{display:none}
+    .strip{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== hero ============== -->
+<section class="hero">
+  <span class="eyebrow">Make your meetings productive again</span>
+  <h1 class="headline">Every meeting passes through <em>the gate</em> first.</h1>
+  <p class="sub">MeetingGate is the AI layer in front of your calendar. It reads your goal, scans Atlassian, Microsoft 365 and Slack, and returns a fully scoped invite — or a Slack thread that makes the meeting unnecessary.</p>
+  <div class="meta-row">
+    <span class="mono">
+</span>
+    <span class="sep"></span>
+    <span>
+</span>
+    <span class="sep"></span>
+    <span>
+</span>
+  </div>
+</section>
+
+<!-- ============== diagram ============== -->
+<section class="stage" id="how">
+  <div class="frame">
+    <div class="frame-label"><span class="dot"></span> Live flow · request → gate → outcome</div>
+
+    <!-- wires svg -->
+    <svg class="wires" viewBox="0 0 1200 540" preserveAspectRatio="none" aria-hidden="true">
+      <!-- prompt to cloud -->
+      <path class="thick flow" d="M 320 130 C 430 130, 470 230, 560 250" />
+      <!-- atlassian/ms/slack to cloud -->
+      <path class="flow" d="M 320 320 C 430 320, 470 290, 560 280" />
+      <path class="flow" d="M 320 380 C 430 380, 470 320, 560 300" />
+      <path class="flow" d="M 320 440 C 430 440, 470 360, 560 320" />
+      <!-- cloud to outputs -->
+      <path class="thick flow" d="M 740 220 C 830 200, 850 130, 920 130" />
+      <path class="thick flow" d="M 750 260 C 840 260, 860 220, 920 220" />
+      <path class="thick flow" d="M 750 300 C 840 300, 860 320, 920 320" />
+      <path class="thick flow" d="M 740 340 C 830 360, 850 430, 920 430" />
+    </svg>
+
+    <div class="diagram">
+
+      <!-- LEFT -->
+      <div class="col left">
+        <div class="prompt">
+          <div class="who"><span class="avatar">SK</span><span>Alex · Product</span></div>
+          <div class="text">"I want to schedule a meeting<span class="caret"></span>"</div>
+        </div>
+
+        <div class="src-label" style="margin-top:18px">Context the gate pulls in</div>
+        <div class="sources">
+          <div class="src">
+            <div class="logo" style="background:#deebff">
+              <!-- Atlassian-style placeholder: two stacked chevrons -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 17l5-5 5 5" stroke="#0052cc" stroke-width="2" stroke-linecap="round"/><path d="M7 11l5-5 5 5" stroke="#2684ff" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="col-text">
+              Atlassian
+              <span class="desc">Jira tickets, Confluence docs</span>
+            </div>
+            <span class="pill">12 docs</span>
+          </div>
+          <div class="src">
+            <div class="logo" style="background:#e5f1fb">
+              <svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="3" width="8.5" height="8.5" fill="#f25022"/><rect x="12.5" y="3" width="8.5" height="8.5" fill="#7fba00"/><rect x="3" y="12.5" width="8.5" height="8.5" fill="#00a4ef"/><rect x="12.5" y="12.5" width="8.5" height="8.5" fill="#ffb900"/></svg>
+            </div>
+            <div class="col-text">
+              Microsoft 365
+              <span class="desc">Calendars, Teams, OneDrive</span>
+            </div>
+            <span class="pill">8 cals</span>
+          </div>
+          <div class="src">
+            <div class="logo" style="background:#f4eaff">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="7" cy="9" r="2" fill="#36c5f0"/><circle cx="17" cy="9" r="2" fill="#2eb67d"/><circle cx="7" cy="15" r="2" fill="#ecb22e"/><circle cx="17" cy="15" r="2" fill="#e01e5a"/></svg>
+            </div>
+            <div class="col-text">
+              Slack
+              <span class="desc">Threads &amp; recent activity</span>
+            </div>
+            <span class="pill">live</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="col center">
+        <span class="arrow-label" style="top:88px;left:-6px">request</span>
+        <span class="arrow-label" style="bottom:84px;left:-12px">context</span>
+
+        <div class="cloud">
+          <div class="cloud-ring"></div>
+          <div class="cloud-ring r2"></div>
+          <div class="cloud-ring r3"></div>
+          <div class="orbiter o1"></div>
+          <div class="orbiter o2"></div>
+          <div class="orbiter o3"></div>
+          <div class="cloud-core">
+            <div class="cloud-label">
+              <div class="tag">Organization Knowledge</div>
+              <div class="kn">MeetingGate</div>
+            </div>
+          </div>
+        </div>
+
+        <span class="arrow-label" style="top:88px;right:-6px">scoped invite</span>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="col right">
+        <div class="out-label">Returned by the gate</div>
+
+        <div class="card">
+          <div class="icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+          </div>
+          <div class="body">
+            <div class="k">Goal</div>
+            <div class="v">Decide on <span class="em">Q3 pricing model</span> for the Pro tier — pick one of three proposals.</div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+
+        <div class="card">
+          <div class="icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="body">
+            <div class="k">Required attendees · 4</div>
+            <div class="v">Alex · Maya (CMO) · Tom (Eng) · Priya (GTM)</div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+
+        <div class="card">
+          <div class="icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+          </div>
+          <div class="body">
+            <div class="k">Time slot</div>
+            <div class="v"><span class="em">Thu, May 7 · 2:30–3:00 PM CET</span> — only window all four are free this week.</div>
+          </div>
+          <div class="ts">30m</div>
+          <div class="check">✓</div>
+        </div>
+
+        <div class="card async">
+          <div class="icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="body" style="width:100%">
+            <div class="k">Async Slack message · #pricing-wg</div>
+            <div class="v">Posted instead — answers may make the meeting unnecessary.</div>
+            <div class="slack-msg">
+              <div class="head">
+                <span class="slack-bot">M</span>
+                <span class="who">MeetingGate</span>
+                <span class="time">10:14 AM</span>
+              </div>
+              <div>Before we book Thu 2:30, three quick questions on the Q3 pricing model. Reply in thread by EOD Wed and I'll only schedule if needed. 🧵</div>
+            </div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============== feature strip ============== -->
+<section class="strip" id="integrations">
+  <div class="feat">
+    <div class="num">01 / Gate</div>
+    <h3>Stop meetings before they start</h3>
+    <p>~38% of requests get resolved as a Slack thread instead of a calendar invite — with the same outcome.</p>
+  </div>
+  <div class="feat">
+    <div class="num">02 / Context</div>
+    <h3>Pulls real organizational context</h3>
+    <p>Tickets, docs, and Slack history feed the gate so the agenda is grounded in what's actually happening.</p>
+  </div>
+  <div class="feat">
+    <div class="num">03 / Calendar-native</div>
+    <h3>Books in Google &amp; Outlook</h3>
+    <p>When a meeting is the right call, MeetingGate writes the invite, attaches the brief, and protects focus time.</p>
+  </div>
+</section>
+
+<!-- ============== sticky cta ============== -->
+<div class="sticky" id="demo">
+  <div class="lead">
+    <span class="pulse"></span>
+    <span>Ready to try?</span>
+  </div>
+  <button onclick="openDemo(event)" type="button">
+    Book a demo
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </button>
+</div>
+
+<script>
+  function openDemo(e){
+    if(e) e.preventDefault();
+    if (window.Calendly && window.Calendly.initPopupWidget){
+      window.Calendly.initPopupWidget({ url: 'https://calendly.com/misha-meetinggate/30min' });
+    } else {
+      window.open('https://calendly.com/misha-meetinggate/30min', '_blank', 'noopener');
+    }
+    return false;
+  }
+</script>
+</body>
+</html>
